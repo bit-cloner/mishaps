@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Happenings</title>
+    <!-- Google Analytics -->
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BHMTQZDZ61"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BHMTQZDZ61');
+</script>
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function(){
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#2c3e50",
+                        "text": "#ffffff"
+                    },
+                    "button": {
+                        "background": "#4285F4",
+                        "text": "#ffffff"
+                    }
+                },
+                "position": "bottom",
+                "content": {
+                    "message": "We use cookies to analyze website traffic and optimize your website experience. By accepting our use of cookies, your data will be aggregated with all other user data.",
+                    "dismiss": "Accept",
+                    "deny": "Decline",
+                    "link": "Learn more",
+                    "href": "https://www.cookiesandyou.com"
+                },
+                "onInitialise": function (status) {
+                    var type = this.options.type;
+                    var didConsent = this.hasConsented();
+                    if (didConsent) {
+                        // Enable Google Analytics
+                        gtag('consent', 'update', {
+                            'analytics_storage': 'granted'
+                        });
+                    }
+                },
+                "onStatusChange": function(status, chosenBefore) {
+                    var type = this.options.type;
+                    var didConsent = this.hasConsented();
+                    if (didConsent) {
+                        // Enable Google Analytics
+                        gtag('consent', 'update', {
+                            'analytics_storage': 'granted'
+                        });
+                    } else {
+                        // Disable Google Analytics
+                        gtag('consent', 'update', {
+                            'analytics_storage': 'denied'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --aws-color: #FF9900;
+            --gcp-color: #4285F4;
+            --azure-color: #0d3f66;
+            --other-color: #4b555d;
+        }
+
+        /* Ticker Styles */
+        .ticker-container {
+            background-color: #1a1a1a;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .ticker-track {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll-left 90s linear infinite;
+            padding: 0 20px;
+        }
+
+        .ticker-container:hover .ticker-track {
+            animation-play-state: paused;
+        }
+
+        .ticker-item {
+            display: inline-block;
+            margin: 0 40px;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .ticker-item a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .ticker-item a:hover {
+            color: var(--gcp-color);
+        }
+
+        .ticker-item .incident-date {
+            color: #888;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            color: #2c3e50;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            color: #2c3e50;
+        }
+
+        .article-meta {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .article-content {
+            color: #2c3e50;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+
+        .loading-spinner .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--gcp-color);
+        }
+
+        #articles-container {
+            position: relative;
+            min-height: 300px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            z-index: 999;
+        }
+
+        .tag-filter {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .tag-button {
+            margin: 0.25rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid;
+            background: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .tag-button[data-provider="aws"] {
+            border-color: var(--aws-color);
+            color: var(--aws-color);
+        }
+
+        .tag-button[data-provider="gcp"] {
+            border-color: var(--gcp-color);
+            color: var(--gcp-color);
+        }
+
+        .tag-button[data-provider="azure"] {
+            border-color: var(--azure-color);
+            color: var(--azure-color);
+        }
+
+        .tag-button.active {
+            color: rgb(248, 242, 242);
+        }
+
+        .tag-button[data-provider="aws"].active {
+            background: var(--aws-color);
+        }
+
+        .tag-button[data-provider="gcp"].active {
+            background: var(--gcp-color);
+        }
+
+        .tag-button[data-provider="azure"].active {
+            background: var(--azure-color);
+        }
+
+        .tag-button:hover {
+            color: white;
+        }
+
+        .tag-button[data-provider="aws"]:hover {
+            background: var(--aws-color);
+        }
+
+        .tag-button[data-provider="gcp"]:hover {
+            background: var(--gcp-color);
+        }
+
+        .tag-button[data-provider="azure"]:hover {
+            background: var(--azure-color);
+        }
+
+        .tag-button[data-provider="other"] {
+            border-color: var(--other-color);
+            color: var(--other-color);
+        }
+
+        .tag-button[data-provider="other"].active {
+            background: var(--other-color);
+            color: white;
+        }
+
+        .tag-button[data-provider="other"]:hover {
+            background: var(--other-color);
+            color: white;
+        }
+
+        .provider-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .aws-badge {
+            background: var(--aws-color);
+        }
+
+        .gcp-badge {
+            background: var(--gcp-color);
+        }
+
+        .azure-badge {
+            background: var(--azure-color);
+        }
+
+        .other-badge {
+            background: var(--other-color);
+        }
+
+        .btn-outline-primary {
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Add styles for AWS incidents */
+        .aws-incident {
+            color: var(--aws-color) !important;
+        }
+        .aws-incident:hover {
+            color: #fff !important;
+            background-color: var(--aws-color);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        /* Add styles for incident badges */
+        .incident-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 8px;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .incident-region {
+            font-size: 0.8rem;
+            color: #cdc6c6;
+            margin-left: 8px;
+        }
+
+        .incident-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .status-active {
+            color: #dc3545;
+        }
+
+        .status-resolved {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <!-- Ticker Section -->
+    <div class="ticker-container">
+        <div class="ticker-track" id="incident-ticker">
+            Loading cloud incidents...
+        </div>
+    </div>
+    <div class="text-center mb-4">
+        <a href="incidents.html" class="btn btn-outline-primary" target="_blank">
+            View Incidents in Detail
+        </a>
+    </div>
+
+    <div class="container py-5">
+        <h1 class="page-title">Cloud Happenings</h1>
+        
+        <!-- Tag Filter Section -->
+        <div class="tag-filter text-center">
+            <h3 class="section-title">Filter by Cloud Provider</h3>
+            <div class="d-flex justify-content-center flex-wrap">
+                <button class="tag-button active" data-provider="aws">AWS</button>
+                <button class="tag-button active" data-provider="gcp">Google Cloud</button>
+                <button class="tag-button active" data-provider="azure">Azure</button>
+                <button class="tag-button active" data-provider="other">Other</button>
+            </div>
+        </div>
+
+        <div id="articles-container" class="row">
+            <div class="loading-overlay"></div>
+            <div id="loading-spinner" class="loading-spinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Fetching cloud updates...</p>
+            </div>
+            <!-- Articles will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Incident Feed Configuration
+        const INCIDENT_FEEDS = {
+            gcp: 'https://status.cloud.google.com/en/feed.atom',
+            aws: 'https://history-events-eu-west-1-prod.s3.amazonaws.com/historyevents.json'
+        };
+
+        // Function to format AWS incident data
+        function formatAWSIncident(incident, region) {
+            const date = new Date(incident.date * 1000).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Get the last event from event_log to determine status
+            const lastEvent = incident.event_log[incident.event_log.length - 1];
+            const regionName = region.split('-').map(word => word.toUpperCase()).join('-');
+            
+            const status = lastEvent.status === '0' ? 'Resolved' : 'Active';
+            
+            return {
+                title: lastEvent.summary,
+                link: '#',
+                pubDate: date,
+                provider: 'aws',
+                region: regionName,
+                status: status
+            };
+        }
+
+        // Function to format GCP incident data
+        function formatGCPIncident(item) {
+            const date = new Date(item.pubDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Extract region and status from GCP incident title
+            const regionMatch = item.title.match(/in (.*?)(?:\.|$)/i);
+            const region = regionMatch ? regionMatch[1] : 'Global';
+            const status = item.title.toLowerCase().includes('resolved') ? 'Resolved' : 'Active';
+
+            return {
+                title: item.title,
+                link: item.link,
+                pubDate: date,
+                provider: 'gcp',
+                region: region,
+                status: status
+            };
+        }
+
+        // Function to fetch AWS incidents through a proxy
+        async function fetchAWSIncidents() {
+            try {
+                // Using a more reliable CORS proxy service
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(INCIDENT_FEEDS.aws));
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Process AWS incidents
+                const awsIncidents = [];
+                for (const region in data) {
+                    const incidents = data[region];
+                    incidents.forEach(incident => {
+                        // Get the last event from event_log
+                        const lastEvent = incident.event_log[incident.event_log.length - 1];
+                        awsIncidents.push(formatAWSIncident(incident, region));
+                    });
+                }
+                
+                // Sort incidents by date, most recent first
+                awsIncidents.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+                
+                return awsIncidents;
+            } catch (error) {
+                console.error('Error fetching AWS incidents:', error);
+                // Return a fallback incident to show something to the user
+                return [{
+                    title: 'Unable to fetch AWS incidents',
+                    link: '#',
+                    pubDate: new Date().toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }),
+                    provider: 'aws',
+                    region: 'GLOBAL',
+                    status: 'Active'
+                }];
+            }
+        }
+
+        // Function to fetch and display incidents
+        async function fetchIncidents() {
+            const ticker = document.getElementById('incident-ticker');
+            ticker.innerHTML = '<span class="ticker-item">Loading incidents...</span>';
+            
+            try {
+                // Fetch GCP incidents
+                const gcpResponse = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(INCIDENT_FEEDS.gcp)}`);
+                const gcpData = await gcpResponse.json();
+                
+                // Fetch AWS incidents
+                const awsIncidents = await fetchAWSIncidents();
+                
+                ticker.innerHTML = '';
+                
+                let allIncidents = [];
+                
+                // Process GCP incidents
+                if (gcpData.status === 'ok' && gcpData.items) {
+                    allIncidents = allIncidents.concat(gcpData.items.slice(0, 5).map(item => formatGCPIncident(item)));
+                }
+                
+                // Add AWS incidents
+                allIncidents = allIncidents.concat(awsIncidents.slice(0, 8));
+                
+                if (allIncidents.length === 0) {
+                    ticker.innerHTML = '<span class="ticker-item">No incidents to display</span>';
+                    return;
+                }
+                
+                // Separate active and resolved incidents
+                const activeIncidents = allIncidents.filter(incident => incident.status === 'Active');
+                const resolvedIncidents = allIncidents.filter(incident => incident.status === 'Resolved');
+                
+                // Sort resolved incidents by date (newest first)
+                resolvedIncidents.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+                
+                // Combine: active incidents first, then sorted resolved incidents
+                allIncidents = [...activeIncidents, ...resolvedIncidents];
+                
+                const items = allIncidents.map(incident => {
+                    const span = document.createElement('span');
+                    span.className = 'ticker-item';
+                    // Create the same ID as in incidents.html
+                    const incidentId = `incident-${incident.provider}-${incident.region.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}-${incident.title.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`;
+                    span.innerHTML = `
+                        <a href="incidents.html#${incidentId}" class="${incident.provider}-incident">
+                            <span class="incident-badge ${incident.provider}-badge">${incident.provider.toUpperCase()}</span>
+                            <span class="incident-region">${incident.region}</span>
+                            <span class="incident-status status-${incident.status.toLowerCase()}">${incident.status}</span>
+                            <span class="incident-title">${incident.title}</span>
+                            <span class="incident-date">${incident.pubDate}</span>
+                        </a>
+                    `;
+                    return span;
+                });
+
+                // Append items twice for seamless looping
+                items.concat(items).forEach(item => ticker.appendChild(item.cloneNode(true)));
+            } catch (error) {
+                console.error('Incident Feed Error:', error);
+                ticker.innerHTML = '<span class="ticker-item">Unable to load cloud incidents</span>';
+            }
+        }
+
+        // RSS2JSON API configuration
+        const FEEDS = {
+            aws: 'https://aws.amazon.com/blogs/aws/feed/',
+            gcp: 'https://cloudblog.withgoogle.com/rss/',
+            azure: 'https://azure.microsoft.com/en-us/blog/feed/',
+            other: 'ghincident.html'  // Changed from github to other
+        };
+
+        let allArticles = [];
+        let activeProviders = new Set(['aws', 'gcp', 'azure', 'other']);  // Changed from github to other
+
+        // Function to fetch articles from a single feed
+        async function fetchFeed(feedUrl, provider) {
+            if (provider === 'other') {  // Changed from github to other
+                // Return the GitHub incident article with a future date to ensure it's always on top
+                return [{
+                    title: 'GitHub Action Supply Chain Attack: A Detailed Timeline',
+                    link: 'ghincident.html',
+                    pubDate: new Date('2099-12-31').toISOString(), // Future date to ensure it's always on top
+                    provider: 'other',  // Changed from github to other
+                    author: 'Sudheer Kamepalli',
+                    description: 'A detailed timeline of the GitHub Action supply chain attack, including the compromise of the tj-actions/changed-files GitHub Action, the injection of malicious code, and the subsequent remediation efforts.',
+                    thumbnail: 'data:image/svg+xml;base64,' + btoa(`
+                        <svg width="400" height="250" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="otherGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#6c757d;stop-opacity:0.1"/>
+                                    <stop offset="100%" style="stop-color:#6c757d;stop-opacity:0.3"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="400" height="250" fill="url(#otherGradient)"/>
+                            <g transform="translate(200, 125)">
+                                <path d="M-60,-30 
+                                         C-60,-50 -40,-60 -20,-60 
+                                         C0,-60 20,-50 20,-30 
+                                         C20,-10 40,0 60,0 
+                                         C80,0 100,-10 100,-30 
+                                         C100,-50 80,-60 60,-60 
+                                         C40,-60 20,-50 20,-30 
+                                         C20,-10 0,0 -20,0 
+                                         C-40,0 -60,-10 -60,-30" 
+                                      fill="#6c757d"
+                                      opacity="0.2"/>
+                                <circle cx="0" cy="-30" r="5" fill="#6c757d" opacity="0.4"/>
+                                <circle cx="40" cy="-30" r="5" fill="#6c757d" opacity="0.4"/>
+                                <circle cx="-40" cy="-30" r="5" fill="#6c757d" opacity="0.4"/>
+                            </g>
+                            <text x="200" y="140" 
+                                  font-family="'Source Sans Pro', sans-serif" 
+                                  font-size="16" 
+                                  fill="#6c757d" 
+                                  text-anchor="middle">
+                                Other Security Incident
+                            </text>
+                        </svg>
+                    `)
+                }];
+            }
+            
+            const RSS2JSON_API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
+            const response = await fetch(RSS2JSON_API_URL);
+            const data = await response.json();
+            
+            if (data.status === 'ok' && data.items) {
+                return data.items.map(item => ({
+                    ...item,
+                    provider
+                }));
+            }
+            return [];
+        }
+
+        // Function to fetch all articles
+        async function fetchAllArticles() {
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            const articlesContainer = document.getElementById('articles-container');
+            
+            loadingSpinner.style.display = 'block';
+            loadingOverlay.style.display = 'block';
+            articlesContainer.innerHTML = '';
+            
+            try {
+                const [awsArticles, gcpArticles, azureArticles, otherArticles] = await Promise.all([
+                    fetchFeed(FEEDS.aws, 'aws'),
+                    fetchFeed(FEEDS.gcp, 'gcp'),
+                    fetchFeed(FEEDS.azure, 'azure'),
+                    fetchFeed(FEEDS.other, 'other')
+                ]);
+                
+                allArticles = [...awsArticles, ...gcpArticles, ...azureArticles, ...otherArticles]
+                    .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+                
+                displayArticles();
+            } catch (error) {
+                console.error('Error fetching articles:', error);
+                articlesContainer.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p class="text-danger">Error loading articles. Please try again later.</p>
+                    </div>
+                `;
+            } finally {
+                loadingSpinner.style.display = 'none';
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        // Function to clean HTML content and limit text length
+        function cleanAndLimitText(text, maxLength = 150) {
+            // Remove HTML tags
+            const div = document.createElement('div');
+            div.innerHTML = text;
+            let cleanText = div.textContent || div.innerText || '';
+            
+            // Remove extra whitespace
+            cleanText = cleanText.replace(/\s+/g, ' ').trim();
+            
+            // Limit length
+            if (cleanText.length > maxLength) {
+                cleanText = cleanText.substring(0, maxLength) + '...';
+            }
+            
+            return cleanText;
+        }
+
+        // Function to display articles based on active providers
+        function displayArticles() {
+            const articlesContainer = document.getElementById('articles-container');
+            articlesContainer.innerHTML = '';
+            
+            const filteredArticles = allArticles.filter(article => 
+                activeProviders.has(article.provider)
+            );
+            
+            filteredArticles.forEach((article, index) => {
+                const articleElement = document.createElement('div');
+                articleElement.className = 'col-md-6 col-lg-4';
+                articleElement.setAttribute('data-aos', 'fade-up');
+                articleElement.setAttribute('data-aos-delay', index * 100);
+                
+                const thumbnail = article.thumbnail || 
+                                article.enclosure?.link || 
+                                article.content?.match(/<img[^>]+src="([^">]+)"/)?.[1] || 
+                                `data:image/svg+xml;base64,${btoa(`
+                                    <svg width="400" height="250" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="cloudGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" style="stop-color:${article.provider === 'aws' ? '#FF9900' : 
+                                                                         article.provider === 'gcp' ? '#4285F4' : 
+                                                                         '#0d3f66'};stop-opacity:0.1"/>
+                                                <stop offset="100%" style="stop-color:${article.provider === 'aws' ? '#FF9900' : 
+                                                                         article.provider === 'gcp' ? '#4285F4' : 
+                                                                         '#0d3f66'};stop-opacity:0.3"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <rect width="400" height="250" fill="url(#cloudGradient)"/>
+                                        <g transform="translate(200, 125)">
+                                            <path d="M-60,-30 
+                                                     C-60,-50 -40,-60 -20,-60 
+                                                     C0,-60 20,-50 20,-30 
+                                                     C20,-10 40,0 60,0 
+                                                     C80,0 100,-10 100,-30 
+                                                     C100,-50 80,-60 60,-60 
+                                                     C40,-60 20,-50 20,-30 
+                                                     C20,-10 0,0 -20,0 
+                                                     C-40,0 -60,-10 -60,-30" 
+                                                  fill="${article.provider === 'aws' ? '#FF9900' : 
+                                                         article.provider === 'gcp' ? '#4285F4' : 
+                                                         '#0d3f66'}"
+                                                  opacity="0.2"/>
+                                            <circle cx="0" cy="-30" r="5" 
+                                                    fill="${article.provider === 'aws' ? '#FF9900' : 
+                                                           article.provider === 'gcp' ? '#4285F4' : 
+                                                           '#0d3f66'}"
+                                                    opacity="0.4"/>
+                                            <circle cx="40" cy="-30" r="5" 
+                                                    fill="${article.provider === 'aws' ? '#FF9900' : 
+                                                           article.provider === 'gcp' ? '#4285F4' : 
+                                                           '#0d3f66'}"
+                                                    opacity="0.4"/>
+                                            <circle cx="-40" cy="-30" r="5" 
+                                                    fill="${article.provider === 'aws' ? '#FF9900' : 
+                                                           article.provider === 'gcp' ? '#4285F4' : 
+                                                           '#0d3f66'}"
+                                                    opacity="0.4"/>
+                                        </g>
+                                        <text x="200" y="140" 
+                                              font-family="'Source Sans Pro', sans-serif" 
+                                              font-size="16" 
+                                              fill="#6c757d" 
+                                              text-anchor="middle">
+                                            No image available
+                                        </text>
+                                    </svg>
+                                `)}`;
+                
+                const pubDate = new Date(article.pubDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                // Clean and limit the description
+                const cleanDescription = cleanAndLimitText(article.description);
+                
+                articleElement.innerHTML = `
+                    <div class="article-card">
+                        <div class="position-relative">
+                            <img src="${thumbnail}" 
+                                 alt="${article.title}" 
+                                 class="article-image">
+                            <span class="provider-badge ${article.provider}-badge">
+                                ${article.provider === 'other' ? 'Other' : article.provider.toUpperCase()}
+                            </span>
+                        </div>
+                        <div class="p-4">
+                            <h2 class="article-title">${article.title}</h2>
+                            <div class="article-meta">
+                                <span>${pubDate}</span>
+                                <span class="mx-2">•</span>
+                                <span>${article.author || 'Anonymous'}</span>
+                            </div>
+                            <p class="article-content">${cleanDescription}</p>
+                            <a href="${article.link}" 
+                               class="btn btn-outline-primary" 
+                               target="_blank">
+                                Read More
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                articlesContainer.appendChild(articleElement);
+            });
+        }
+
+        // Tag filter click handler
+        document.querySelectorAll('.tag-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const provider = button.dataset.provider;
+                button.classList.toggle('active');
+                
+                if (button.classList.contains('active')) {
+                    activeProviders.add(provider);
+                } else {
+                    activeProviders.delete(provider);
+                }
+                
+                displayArticles();
+            });
+        });
+
+        // Fetch incidents and articles when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchIncidents();
+            fetchAllArticles();
+        });
+    </script>
+</body>
+</html>
