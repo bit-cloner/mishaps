@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Happenings</title>
+    <title>Cloud Incidents Details</title>
     <!-- Google Analytics -->
    <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BHMTQZDZ61"></script>
@@ -70,70 +70,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         :root {
             --aws-color: #FF9900;
             --gcp-color: #4285F4;
             --azure-color: #0d3f66;
-            --other-color: #4b555d;
-        }
-
-        /* Ticker Styles */
-        .ticker-container {
-            background-color: #1a1a1a;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .ticker-track {
-            display: inline-block;
-            white-space: nowrap;
-            animation: scroll-left 90s linear infinite;
-            padding: 0 20px;
-        }
-
-        .ticker-container:hover .ticker-track {
-            animation-play-state: paused;
-        }
-
-        .ticker-item {
-            display: inline-block;
-            margin: 0 40px;
-            font-family: 'Source Sans Pro', sans-serif;
-        }
-
-        .ticker-item a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        .ticker-item a:hover {
-            color: var(--gcp-color);
-        }
-
-        .ticker-item .incident-date {
-            color: #888;
-            font-size: 0.8rem;
-            margin-left: 10px;
-        }
-
-        @keyframes scroll-left {
-            0% {
-                transform: translateX(0%);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
         }
 
         body {
@@ -143,194 +84,82 @@
             line-height: 1.6;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif;
-            color: #2c3e50;
-        }
-
         .page-title {
+            font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 2rem;
+            margin: 2rem 0;
             text-align: center;
             color: #2c3e50;
         }
 
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
+        .incidents-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+            max-height: 80vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #c1c1c1 #f1f1f1;
         }
 
-        .article-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 2rem;
-            overflow: hidden;
-            height: 100%;
+        .incidents-container::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .article-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        .incidents-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
         }
 
-        .article-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            line-height: 1.4;
-            color: #2c3e50;
+        .incidents-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
         }
 
-        .article-meta {
-            color: #6c757d;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            font-weight: 400;
+        .incidents-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
         }
 
-        .article-content {
-            color: #2c3e50;
-            line-height: 1.6;
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .article-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
-
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-        }
-
-        .loading-spinner .spinner-border {
-            width: 3rem;
-            height: 3rem;
-            color: var(--gcp-color);
-        }
-
-        #articles-container {
-            position: relative;
-            min-height: 300px;
-        }
-
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
-            display: none;
-            z-index: 999;
-        }
-
-        .tag-filter {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
+        .incident-tile {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .tag-button {
-            margin: 0.25rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            border: 2px solid;
-            background: white;
-            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.95rem;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
         }
 
-        .tag-button[data-provider="aws"] {
-            border-color: var(--aws-color);
-            color: var(--aws-color);
+        .incident-tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .tag-button[data-provider="gcp"] {
-            border-color: var(--gcp-color);
-            color: var(--gcp-color);
+        .incident-tile.aws {
+            border-left-color: var(--aws-color);
         }
 
-        .tag-button[data-provider="azure"] {
-            border-color: var(--azure-color);
-            color: var(--azure-color);
+        .incident-tile.gcp {
+            border-left-color: var(--gcp-color);
         }
 
-        .tag-button.active {
-            color: rgb(248, 242, 242);
-        }
-
-        .tag-button[data-provider="aws"].active {
-            background: var(--aws-color);
-        }
-
-        .tag-button[data-provider="gcp"].active {
-            background: var(--gcp-color);
-        }
-
-        .tag-button[data-provider="azure"].active {
-            background: var(--azure-color);
-        }
-
-        .tag-button:hover {
-            color: white;
-        }
-
-        .tag-button[data-provider="aws"]:hover {
-            background: var(--aws-color);
-        }
-
-        .tag-button[data-provider="gcp"]:hover {
-            background: var(--gcp-color);
-        }
-
-        .tag-button[data-provider="azure"]:hover {
-            background: var(--azure-color);
-        }
-
-        .tag-button[data-provider="other"] {
-            border-color: var(--other-color);
-            color: var(--other-color);
-        }
-
-        .tag-button[data-provider="other"].active {
-            background: var(--other-color);
-            color: white;
-        }
-
-        .tag-button[data-provider="other"]:hover {
-            background: var(--other-color);
-            color: white;
+        .incident-tile.expanded {
+            grid-column: 1 / -1;
+            z-index: 10;
         }
 
         .provider-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.35rem 0.85rem;
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
             border-radius: 15px;
             font-size: 0.8rem;
             font-weight: 600;
-            color: white !important;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: white;
+            margin-bottom: 1rem;
         }
 
         .aws-badge {
@@ -341,119 +170,101 @@
             background: var(--gcp-color);
         }
 
-        .azure-badge {
-            background: var(--azure-color);
-        }
-
-        .other-badge {
-            background: var(--other-color);
-        }
-
-        .btn-outline-primary {
+        .incident-status {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
             font-weight: 600;
-            padding: 0.5rem 1.2rem;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-primary:hover {
-            transform: translateY(-2px);
-        }
-
-        /* Add styles for AWS incidents */
-        .aws-incident {
-            color: var(--aws-color) !important;
-        }
-        .aws-incident:hover {
-            color: #fff !important;
-            background-color: var(--aws-color);
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-
-        /* Add styles for incident badges */
-        .incident-badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-right: 8px;
-            text-transform: uppercase;
             color: white;
         }
 
-        .incident-region {
-            font-size: 0.8rem;
-            color: #cdc6c6;
-            margin-left: 8px;
-        }
-
-        .incident-status {
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
         .status-active {
-            color: #dc3545;
+            background: #dc3545;
         }
 
         .status-resolved {
-            color: #28a745;
+            background: #28a745;
+        }
+
+        .incident-region {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .incident-service {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .incident-summary {
+            color: #495057;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .incident-details {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .incident-tile.expanded .incident-details {
+            display: block;
+        }
+
+        .incident-date {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .incidents-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Ticker Section -->
-    <div class="ticker-container">
-        <div class="ticker-track" id="incident-ticker">
-            Loading cloud incidents...
-        </div>
-    </div>
-    <div class="text-center mb-4">
-        <a href="incidents.html" class="btn btn-outline-primary" target="_blank">
-            View Incidents in Detail
-        </a>
-    </div>
-
     <div class="container py-5">
-        <h1 class="page-title">Cloud Happenings</h1>
+        <h1 class="page-title">Cloud Incidents Details</h1>
         
-        <!-- Tag Filter Section -->
-        <div class="tag-filter text-center">
-            <h3 class="section-title">Filter by Cloud Provider</h3>
-            <div class="d-flex justify-content-center flex-wrap">
-                <button class="tag-button active" data-provider="aws">AWS</button>
-                <button class="tag-button active" data-provider="gcp">Google Cloud</button>
-                <button class="tag-button active" data-provider="azure">Azure</button>
-                <button class="tag-button active" data-provider="other">Other</button>
-            </div>
-        </div>
-
-        <div id="articles-container" class="row">
-            <div class="loading-overlay"></div>
-            <div id="loading-spinner" class="loading-spinner">
-                <div class="spinner-border" role="status">
+        <div class="incidents-container" id="incidents-container">
+            <div class="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <p class="mt-3 text-muted">Fetching cloud updates...</p>
             </div>
-            <!-- Articles will be dynamically inserted here -->
         </div>
+
+        <a href="haps.html" class="btn btn-primary back-button">
+            Back to Dashboard
+        </a>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS Animation Library -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-
         // Incident Feed Configuration
         const INCIDENT_FEEDS = {
             gcp: 'https://status.cloud.google.com/en/feed.atom',
@@ -470,10 +281,14 @@
                 minute: '2-digit'
             });
             
-            // Get the last event from event_log to determine status
             const lastEvent = incident.event_log[incident.event_log.length - 1];
             const regionName = region.split('-').map(word => word.toUpperCase()).join('-');
             
+            // Extract service name from the summary
+            const serviceMatch = lastEvent.summary.match(/\[(.*?)\]/);
+            const service = serviceMatch ? serviceMatch[1] : 'Unknown Service';
+            
+            // Determine status based on the last event
             const status = lastEvent.status === '0' ? 'Resolved' : 'Active';
             
             return {
@@ -482,7 +297,9 @@
                 pubDate: date,
                 provider: 'aws',
                 region: regionName,
-                status: status
+                service: service,
+                status: status,
+                description: lastEvent.message || lastEvent.summary
             };
         }
 
@@ -496,10 +313,13 @@
                 minute: '2-digit'
             });
 
-            // Extract region and status from GCP incident title
             const regionMatch = item.title.match(/in (.*?)(?:\.|$)/i);
             const region = regionMatch ? regionMatch[1] : 'Global';
             const status = item.title.toLowerCase().includes('resolved') ? 'Resolved' : 'Active';
+
+            // Extract service name from the title
+            const serviceMatch = item.title.match(/^(.*?)\s+in/i);
+            const service = serviceMatch ? serviceMatch[1] : 'Unknown Service';
 
             return {
                 title: item.title,
@@ -507,14 +327,34 @@
                 pubDate: date,
                 provider: 'gcp',
                 region: region,
-                status: status
+                service: service,
+                status: status,
+                description: item.description
             };
         }
 
-        // Function to fetch AWS incidents through a proxy
+        // Function to create incident tile HTML
+        function createIncidentTile(incident) {
+            const incidentId = `incident-${incident.provider}-${incident.region.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}-${incident.title.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`;
+            
+            return `
+                <div class="incident-tile ${incident.provider}" id="${incidentId}">
+                    <span class="provider-badge ${incident.provider}-badge">${incident.provider.toUpperCase()}</span>
+                    <span class="incident-status status-${incident.status.toLowerCase()}">${incident.status}</span>
+                    <div class="incident-region">${incident.region}</div>
+                    <div class="incident-service">${incident.service}</div>
+                    <div class="incident-summary">${incident.title}</div>
+                    <div class="incident-date">${incident.pubDate}</div>
+                    <div class="incident-details">
+                        ${incident.description}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to fetch AWS incidents
         async function fetchAWSIncidents() {
             try {
-                // Using a more reliable CORS proxy service
                 const proxyUrl = 'https://api.allorigins.win/raw?url=';
                 const response = await fetch(proxyUrl + encodeURIComponent(INCIDENT_FEEDS.aws));
                 
@@ -523,363 +363,112 @@
                 }
                 
                 const data = await response.json();
-                
-                // Process AWS incidents
                 const awsIncidents = [];
+                
+                // Log the data to check its structure
+                console.log('AWS Data:', data);
+                
                 for (const region in data) {
                     const incidents = data[region];
-                    incidents.forEach(incident => {
-                        // Get the last event from event_log
-                        const lastEvent = incident.event_log[incident.event_log.length - 1];
-                        awsIncidents.push(formatAWSIncident(incident, region));
-                    });
+                    if (Array.isArray(incidents)) {
+                        incidents.forEach(incident => {
+                            if (incident && incident.event_log && incident.event_log.length > 0) {
+                                awsIncidents.push(formatAWSIncident(incident, region));
+                            }
+                        });
+                    }
                 }
                 
-                // Sort incidents by date, most recent first
+                // Sort by date
                 awsIncidents.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+                
+                // Log the processed incidents
+                console.log('Processed AWS Incidents:', awsIncidents);
                 
                 return awsIncidents;
             } catch (error) {
                 console.error('Error fetching AWS incidents:', error);
-                // Return a fallback incident to show something to the user
-                return [{
-                    title: 'Unable to fetch AWS incidents',
-                    link: '#',
-                    pubDate: new Date().toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }),
-                    provider: 'aws',
-                    region: 'GLOBAL',
-                    status: 'Active'
-                }];
+                return [];
+            }
+        }
+
+        // Function to fetch GCP incidents
+        async function fetchGCPIncidents() {
+            try {
+                const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(INCIDENT_FEEDS.gcp)}`);
+                const data = await response.json();
+                
+                if (data.status === 'ok' && data.items) {
+                    return data.items.map(item => formatGCPIncident(item))
+                        .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+                }
+                return [];
+            } catch (error) {
+                console.error('Error fetching GCP incidents:', error);
+                return [];
             }
         }
 
         // Function to fetch and display incidents
-        async function fetchIncidents() {
-            const ticker = document.getElementById('incident-ticker');
-            ticker.innerHTML = '<span class="ticker-item">Loading incidents...</span>';
+        async function displayIncidents() {
+            const container = document.getElementById('incidents-container');
             
             try {
-                // Fetch GCP incidents
-                const gcpResponse = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(INCIDENT_FEEDS.gcp)}`);
-                const gcpData = await gcpResponse.json();
-                
-                // Fetch AWS incidents
-                const awsIncidents = await fetchAWSIncidents();
-                
-                ticker.innerHTML = '';
-                
-                let allIncidents = [];
-                
-                // Process GCP incidents
-                if (gcpData.status === 'ok' && gcpData.items) {
-                    allIncidents = allIncidents.concat(gcpData.items.slice(0, 5).map(item => formatGCPIncident(item)));
-                }
-                
-                // Add AWS incidents
-                allIncidents = allIncidents.concat(awsIncidents.slice(0, 8));
-                
-                if (allIncidents.length === 0) {
-                    ticker.innerHTML = '<span class="ticker-item">No incidents to display</span>';
-                    return;
-                }
-                
-                // Separate active and resolved incidents
-                const activeIncidents = allIncidents.filter(incident => incident.status === 'Active');
-                const resolvedIncidents = allIncidents.filter(incident => incident.status === 'Resolved');
-                
-                // Sort resolved incidents by date (newest first)
-                resolvedIncidents.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-                
-                // Combine: active incidents first, then sorted resolved incidents
-                allIncidents = [...activeIncidents, ...resolvedIncidents];
-                
-                const items = allIncidents.map(incident => {
-                    const span = document.createElement('span');
-                    span.className = 'ticker-item';
-                    // Create the same ID as in incidents.html
-                    const incidentId = `incident-${incident.provider}-${incident.region.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}-${incident.title.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`;
-                    span.innerHTML = `
-                        <a href="incidents.html#${incidentId}" class="${incident.provider}-incident">
-                            <span class="incident-badge ${incident.provider}-badge">${incident.provider.toUpperCase()}</span>
-                            <span class="incident-region">${incident.region}</span>
-                            <span class="incident-status status-${incident.status.toLowerCase()}">${incident.status}</span>
-                            <span class="incident-title">${incident.title}</span>
-                            <span class="incident-date">${incident.pubDate}</span>
-                        </a>
-                    `;
-                    return span;
-                });
-
-                // Append items twice for seamless looping
-                items.concat(items).forEach(item => ticker.appendChild(item.cloneNode(true)));
-            } catch (error) {
-                console.error('Incident Feed Error:', error);
-                ticker.innerHTML = '<span class="ticker-item">Unable to load cloud incidents</span>';
-            }
-        }
-
-        // RSS2JSON API configuration
-        const FEEDS = {
-            aws: 'https://aws.amazon.com/blogs/aws/feed/',
-            gcp: 'https://cloudblog.withgoogle.com/rss/',
-            azure: 'https://azure.microsoft.com/en-us/blog/feed/',
-            other: 'ghincident.html'  // Changed from github to other
-        };
-
-        let allArticles = [];
-        let activeProviders = new Set(['aws', 'gcp', 'azure', 'other']);  // Changed from github to other
-
-        // Function to fetch articles from a single feed
-        async function fetchFeed(feedUrl, provider) {
-            if (provider === 'other') {  // Changed from github to other
-                // Return the GitHub incident article with a future date to ensure it's always on top
-                return [{
-                    title: 'GitHub Action Supply Chain Attack: A Detailed Timeline',
-                    link: 'ghincident.html',
-                    pubDate: new Date('2099-12-31').toISOString(), // Future date to ensure it's always on top
-                    provider: 'other',  // Changed from github to other
-                    author: 'Sudheer Kamepalli',
-                    description: 'A detailed timeline of the GitHub Action supply chain attack, including the compromise of the tj-actions/changed-files GitHub Action, the injection of malicious code, and the subsequent remediation efforts.',
-                    thumbnail: 'data:image/svg+xml;base64,' + btoa(`
-                        <svg width="400" height="250" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="otherGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#6c757d;stop-opacity:0.1"/>
-                                    <stop offset="100%" style="stop-color:#6c757d;stop-opacity:0.3"/>
-                                </linearGradient>
-                            </defs>
-                            <rect width="400" height="250" fill="url(#otherGradient)"/>
-                            <g transform="translate(200, 125)">
-                                <path d="M-60,-30 
-                                         C-60,-50 -40,-60 -20,-60 
-                                         C0,-60 20,-50 20,-30 
-                                         C20,-10 40,0 60,0 
-                                         C80,0 100,-10 100,-30 
-                                         C100,-50 80,-60 60,-60 
-                                         C40,-60 20,-50 20,-30 
-                                         C20,-10 0,0 -20,0 
-                                         C-40,0 -60,-10 -60,-30" 
-                                      fill="#6c757d"
-                                      opacity="0.2"/>
-                                <circle cx="0" cy="-30" r="5" fill="#6c757d" opacity="0.4"/>
-                                <circle cx="40" cy="-30" r="5" fill="#6c757d" opacity="0.4"/>
-                                <circle cx="-40" cy="-30" r="5" fill="#6c757d" opacity="0.4"/>
-                            </g>
-                            <text x="200" y="140" 
-                                  font-family="'Source Sans Pro', sans-serif" 
-                                  font-size="16" 
-                                  fill="#6c757d" 
-                                  text-anchor="middle">
-                                Other Security Incident
-                            </text>
-                        </svg>
-                    `)
-                }];
-            }
-            
-            const RSS2JSON_API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
-            const response = await fetch(RSS2JSON_API_URL);
-            const data = await response.json();
-            
-            if (data.status === 'ok' && data.items) {
-                return data.items.map(item => ({
-                    ...item,
-                    provider
-                }));
-            }
-            return [];
-        }
-
-        // Function to fetch all articles
-        async function fetchAllArticles() {
-            const loadingSpinner = document.getElementById('loading-spinner');
-            const loadingOverlay = document.querySelector('.loading-overlay');
-            const articlesContainer = document.getElementById('articles-container');
-            
-            loadingSpinner.style.display = 'block';
-            loadingOverlay.style.display = 'block';
-            articlesContainer.innerHTML = '';
-            
-            try {
-                const [awsArticles, gcpArticles, azureArticles, otherArticles] = await Promise.all([
-                    fetchFeed(FEEDS.aws, 'aws'),
-                    fetchFeed(FEEDS.gcp, 'gcp'),
-                    fetchFeed(FEEDS.azure, 'azure'),
-                    fetchFeed(FEEDS.other, 'other')
+                const [awsIncidents, gcpIncidents] = await Promise.all([
+                    fetchAWSIncidents(),
+                    fetchGCPIncidents()
                 ]);
                 
-                allArticles = [...awsArticles, ...gcpArticles, ...azureArticles, ...otherArticles]
+                // Log the fetched incidents
+                console.log('AWS Incidents:', awsIncidents);
+                console.log('GCP Incidents:', gcpIncidents);
+                
+                const allIncidents = [...awsIncidents, ...gcpIncidents]
                     .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
                 
-                displayArticles();
-            } catch (error) {
-                console.error('Error fetching articles:', error);
-                articlesContainer.innerHTML = `
-                    <div class="col-12 text-center">
-                        <p class="text-danger">Error loading articles. Please try again later.</p>
-                    </div>
-                `;
-            } finally {
-                loadingSpinner.style.display = 'none';
-                loadingOverlay.style.display = 'none';
-            }
-        }
-
-        // Function to clean HTML content and limit text length
-        function cleanAndLimitText(text, maxLength = 150) {
-            // Remove HTML tags
-            const div = document.createElement('div');
-            div.innerHTML = text;
-            let cleanText = div.textContent || div.innerText || '';
-            
-            // Remove extra whitespace
-            cleanText = cleanText.replace(/\s+/g, ' ').trim();
-            
-            // Limit length
-            if (cleanText.length > maxLength) {
-                cleanText = cleanText.substring(0, maxLength) + '...';
-            }
-            
-            return cleanText;
-        }
-
-        // Function to display articles based on active providers
-        function displayArticles() {
-            const articlesContainer = document.getElementById('articles-container');
-            articlesContainer.innerHTML = '';
-            
-            const filteredArticles = allArticles.filter(article => 
-                activeProviders.has(article.provider)
-            );
-            
-            filteredArticles.forEach((article, index) => {
-                const articleElement = document.createElement('div');
-                articleElement.className = 'col-md-6 col-lg-4';
-                articleElement.setAttribute('data-aos', 'fade-up');
-                articleElement.setAttribute('data-aos-delay', index * 100);
+                // Log the combined incidents
+                console.log('All Incidents:', allIncidents);
                 
-                const thumbnail = article.thumbnail || 
-                                article.enclosure?.link || 
-                                article.content?.match(/<img[^>]+src="([^">]+)"/)?.[1] || 
-                                `data:image/svg+xml;base64,${btoa(`
-                                    <svg width="400" height="250" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <linearGradient id="cloudGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                <stop offset="0%" style="stop-color:${article.provider === 'aws' ? '#FF9900' : 
-                                                                         article.provider === 'gcp' ? '#4285F4' : 
-                                                                         '#0d3f66'};stop-opacity:0.1"/>
-                                                <stop offset="100%" style="stop-color:${article.provider === 'aws' ? '#FF9900' : 
-                                                                         article.provider === 'gcp' ? '#4285F4' : 
-                                                                         '#0d3f66'};stop-opacity:0.3"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <rect width="400" height="250" fill="url(#cloudGradient)"/>
-                                        <g transform="translate(200, 125)">
-                                            <path d="M-60,-30 
-                                                     C-60,-50 -40,-60 -20,-60 
-                                                     C0,-60 20,-50 20,-30 
-                                                     C20,-10 40,0 60,0 
-                                                     C80,0 100,-10 100,-30 
-                                                     C100,-50 80,-60 60,-60 
-                                                     C40,-60 20,-50 20,-30 
-                                                     C20,-10 0,0 -20,0 
-                                                     C-40,0 -60,-10 -60,-30" 
-                                                  fill="${article.provider === 'aws' ? '#FF9900' : 
-                                                         article.provider === 'gcp' ? '#4285F4' : 
-                                                         '#0d3f66'}"
-                                                  opacity="0.2"/>
-                                            <circle cx="0" cy="-30" r="5" 
-                                                    fill="${article.provider === 'aws' ? '#FF9900' : 
-                                                           article.provider === 'gcp' ? '#4285F4' : 
-                                                           '#0d3f66'}"
-                                                    opacity="0.4"/>
-                                            <circle cx="40" cy="-30" r="5" 
-                                                    fill="${article.provider === 'aws' ? '#FF9900' : 
-                                                           article.provider === 'gcp' ? '#4285F4' : 
-                                                           '#0d3f66'}"
-                                                    opacity="0.4"/>
-                                            <circle cx="-40" cy="-30" r="5" 
-                                                    fill="${article.provider === 'aws' ? '#FF9900' : 
-                                                           article.provider === 'gcp' ? '#4285F4' : 
-                                                           '#0d3f66'}"
-                                                    opacity="0.4"/>
-                                        </g>
-                                        <text x="200" y="140" 
-                                              font-family="'Source Sans Pro', sans-serif" 
-                                              font-size="16" 
-                                              fill="#6c757d" 
-                                              text-anchor="middle">
-                                            No image available
-                                        </text>
-                                    </svg>
-                                `)}`;
+                container.innerHTML = allIncidents.map(incident => createIncidentTile(incident)).join('');
                 
-                const pubDate = new Date(article.pubDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
+                // Add click handlers for expanding/collapsing tiles
+                document.querySelectorAll('.incident-tile').forEach(tile => {
+                    tile.addEventListener('click', () => {
+                        // Collapse all other expanded tiles
+                        document.querySelectorAll('.incident-tile.expanded').forEach(expandedTile => {
+                            if (expandedTile !== tile) {
+                                expandedTile.classList.remove('expanded');
+                            }
+                        });
+                        
+                        // Toggle the clicked tile
+                        tile.classList.toggle('expanded');
+                        
+                        // Scroll to the expanded tile
+                        if (tile.classList.contains('expanded')) {
+                            tile.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
                 });
-                
-                // Clean and limit the description
-                const cleanDescription = cleanAndLimitText(article.description);
-                
-                articleElement.innerHTML = `
-                    <div class="article-card">
-                        <div class="position-relative">
-                            <img src="${thumbnail}" 
-                                 alt="${article.title}" 
-                                 class="article-image">
-                            <span class="provider-badge ${article.provider}-badge">
-                                ${article.provider === 'other' ? 'Other' : article.provider.toUpperCase()}
-                            </span>
-                        </div>
-                        <div class="p-4">
-                            <h2 class="article-title">${article.title}</h2>
-                            <div class="article-meta">
-                                <span>${pubDate}</span>
-                                <span class="mx-2">•</span>
-                                <span>${article.author || 'Anonymous'}</span>
-                            </div>
-                            <p class="article-content">${cleanDescription}</p>
-                            <a href="${article.link}" 
-                               class="btn btn-outline-primary" 
-                               target="_blank">
-                                Read More
-                            </a>
-                        </div>
-                    </div>
-                `;
-                
-                articlesContainer.appendChild(articleElement);
-            });
+
+                // Check for hash in URL and expand the corresponding incident
+                if (window.location.hash) {
+                    const targetIncident = document.querySelector(window.location.hash);
+                    if (targetIncident) {
+                        targetIncident.classList.add('expanded');
+                        setTimeout(() => {
+                            targetIncident.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 500);
+                    }
+                }
+            } catch (error) {
+                console.error('Error displaying incidents:', error);
+                container.innerHTML = '<p class="text-center text-danger">Error loading incidents</p>';
+            }
         }
 
-        // Tag filter click handler
-        document.querySelectorAll('.tag-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const provider = button.dataset.provider;
-                button.classList.toggle('active');
-                
-                if (button.classList.contains('active')) {
-                    activeProviders.add(provider);
-                } else {
-                    activeProviders.delete(provider);
-                }
-                
-                displayArticles();
-            });
-        });
-
-        // Fetch incidents and articles when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchIncidents();
-            fetchAllArticles();
-        });
+        // Load incidents when the page loads
+        document.addEventListener('DOMContentLoaded', displayIncidents);
     </script>
 </body>
-</html>
+</html> 
